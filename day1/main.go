@@ -8,8 +8,8 @@ import (
 )
 
 func main() {
-	// inputFile := "inputs/input.txt"
-	inputFile := "inputs/sample.txt"
+	inputFile := "inputs/input.txt"
+	// inputFile := "inputs/sample.txt"
 	b, err := os.ReadFile(inputFile)
 	if err != nil {
 		fmt.Println(err)
@@ -56,12 +56,10 @@ func getResult(fileContent string, initialNumber int) (int, error) {
 			num = num * -1
 
 			// part2, how many times we have crossed the 0
-			// first check if we cross the 0 when moving to the left
+			// Do we cross when we move to the left ?
 			if res != 0 && res+num < 0 {
 				nTimesRotationBecomes0++
 			}
-			// how many full circles
-			nTimesRotationBecomes0 += (num / 100)
 
 			res = (res + num) % 100
 			if res < 0 {
@@ -71,15 +69,8 @@ func getResult(fileContent string, initialNumber int) (int, error) {
 		case 'R':
 			// part2, how many times we have crossed the 0
 			// Do we cross when we move to the right ?
-			if res+num > 100 {
+			if res != 0 && res+num > 100 {
 				nTimesRotationBecomes0++
-			}
-
-			// how many full circles have we performed while rotating the dial?
-			temp := num / 100
-			if temp > 0 {
-				// we don't want to multiply by 0 and loose the count
-				nTimesRotationBecomes0 *= temp
 			}
 
 			res = (res + num) % 100
@@ -93,6 +84,17 @@ func getResult(fileContent string, initialNumber int) (int, error) {
 			nTimesRotationBecomes0++
 		}
 
+		// how many full circles have we performed while rotating the dial?
+		temp := num / 100
+		// always absolute number
+		if temp < 0 {
+			temp = temp * -1
+		}
+		if temp > 0 {
+			// we don't want to multiply by 0 and loose the count
+			nTimesRotationBecomes0 += temp
+		}
+
 		fmt.Println("res after:", res)
 		fmt.Println("crossed the 0 so far:", nTimesRotationBecomes0)
 
@@ -102,3 +104,5 @@ func getResult(fileContent string, initialNumber int) (int, error) {
 
 	return nTimesRotationBecomes0, nil
 }
+
+// 7193 too high
