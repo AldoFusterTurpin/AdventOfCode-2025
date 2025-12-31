@@ -62,6 +62,7 @@ Because the dial points at 0 a total of three times during this process, the pas
 Analyze the rotations in your attached document. What's the actual password to open the door?
 
 # Ideas
+## Part 1
 ```
 L68
 L30
@@ -98,3 +99,9 @@ TLDR:
 - if result > 100 do result = result - 100 = 55 -> modulus operand would also work
 
 This ^ just works when the result is not that big that represents more than one complete rotation. So what we need to do is res = (res + num) % 100, but num should be converted to negative if we are rotating to the Left. That way we always get the correct result. With a couple of examples in pen and paper is easier to check (with the given sample)
+
+## Part2
+0..99
+
+
+

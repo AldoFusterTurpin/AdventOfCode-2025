@@ -8,8 +8,8 @@ import (
 )
 
 func main() {
-	inputFile := "inputs/input.txt"
-	// inputFile := "inputs/sample.txt"
+	// inputFile := "inputs/input.txt"
+	inputFile := "inputs/sample.txt"
 	b, err := os.ReadFile(inputFile)
 	if err != nil {
 		fmt.Println(err)
@@ -28,7 +28,6 @@ func main() {
 
 func getResult(fileContent string, initialNumber int) (int, error) {
 	fileContent = strings.Trim(fileContent, " ")
-	// fmt.Println(fileContent)
 	lines := strings.Split(fileContent, "\n")
 
 	res := initialNumber
@@ -41,24 +40,48 @@ func getResult(fileContent string, initialNumber int) (int, error) {
 			continue
 		}
 
+		fmt.Println("res before:", res)
+		fmt.Println(line)
+
 		c := line[0]
-		// fmt.Println(string(c))
 
 		numStr := line[1:]
 		num, err := strconv.Atoi(numStr)
 		if err != nil {
 			return 0, err
 		}
-		// fmt.Println(num)
 
 		switch c {
 		case 'L':
 			num = num * -1
+
+			// part2, how many times we have crossed the 0
+			// first check if we cross the 0 when moving to the left
+			if res != 0 && res+num < 0 {
+				nTimesRotationBecomes0++
+			}
+			// how many full circles
+			nTimesRotationBecomes0 += (num / 100)
+
 			res = (res + num) % 100
 			if res < 0 {
 				res += 100
 			}
+
 		case 'R':
+			// part2, how many times we have crossed the 0
+			// Do we cross when we move to the right ?
+			if res+num > 100 {
+				nTimesRotationBecomes0++
+			}
+
+			// how many full circles have we performed while rotating the dial?
+			temp := num / 100
+			if temp > 0 {
+				// we don't want to multiply by 0 and loose the count
+				nTimesRotationBecomes0 *= temp
+			}
+
 			res = (res + num) % 100
 			if res < 0 {
 				res += 100
@@ -70,8 +93,12 @@ func getResult(fileContent string, initialNumber int) (int, error) {
 			nTimesRotationBecomes0++
 		}
 
-		// fmt.Println("res so far:", res)
-		// fmt.Println("***************************************")
+		fmt.Println("res after:", res)
+		fmt.Println("crossed the 0 so far:", nTimesRotationBecomes0)
+
+		fmt.Println()
+		fmt.Println()
 	}
+
 	return nTimesRotationBecomes0, nil
 }
