@@ -62,6 +62,7 @@ Because the dial points at 0 a total of three times during this process, the pas
 Analyze the rotations in your attached document. What's the actual password to open the door?
 
 # Ideas
+## Part 1
 ```
 L68
 L30
@@ -98,3 +99,8 @@ TLDR:
 - if result > 100 do result = result - 100 = 55 -> modulus operand would also work
 
 This ^ just works when the result is not that big that represents more than one complete rotation. So what we need to do is res = (res + num) % 100, but num should be converted to negative if we are rotating to the Left. That way we always get the correct result. With a couple of examples in pen and paper is easier to check (with the given sample)
+
+## Part2
+For this part, I implemented the obvious and simple brute force solution O(n) as it is easy to reason about: simply move to the left or right one step at a time and count how many 0s we cross and convert to 0 and 99 when needed. 
+
+I also tried the math approach by using the multiples of 100 that we have in the (final - initial) steps: the move to the right part was easy and wokring, but for the "move to the left" case I was getting some paths wrong (I believe for the start at 0 I counted wrong by one movement), so I decided to simply keep the brute force solution as was straightforward, but I was close to the "math" version.
