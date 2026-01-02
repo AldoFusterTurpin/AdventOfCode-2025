@@ -8,8 +8,9 @@ import (
 )
 
 func main() {
-	inputFile := "inputs/input.txt"
-	// inputFile := "inputs/sample.txt"
+	inputFile := "inputs/sample.txt"
+	// inputFile := "inputs/test.txt"
+	// inputFile := "inputs/input.txt"
 	b, err := os.ReadFile(inputFile)
 	if err != nil {
 		fmt.Println(err)
@@ -50,53 +51,16 @@ func getResult(fileContent string, initialNumber int) (int, error) {
 		if err != nil {
 			return 0, err
 		}
-
-		switch c {
-		case 'L':
-			num = num * -1
-
-			// part2, how many times we have crossed the 0
-			// Do we cross when we move to the left ?
-			if res != 0 && res+num < 0 {
-				nTimesRotationBecomes0++
-			}
-
-			res = (res + num) % 100
-			if res < 0 {
-				res += 100
-			}
-
-		case 'R':
-			// part2, how many times we have crossed the 0
-			// Do we cross when we move to the right ?
-			if res != 0 && res+num > 100 {
-				nTimesRotationBecomes0++
-			}
-
-			res = (res + num) % 100
-			if res < 0 {
-				res += 100
-			}
-		default:
-			return 0, fmt.Errorf("unsupported rotation direction %v", c)
+		dialRotation := DialRotation{
+			direction:                   c,
+			nStepsToRotate:              num,
+			dialPosition:                res,
+			nTimesRotationBecomes0SoFar: nTimesRotationBecomes0,
 		}
-		if res == 0 {
-			nTimesRotationBecomes0++
-		}
-
-		// how many full circles have we performed while rotating the dial?
-		temp := num / 100
-		// always absolute number
-		if temp < 0 {
-			temp = temp * -1
-		}
-		if temp > 0 {
-			// we don't want to multiply by 0 and loose the count
-			nTimesRotationBecomes0 += temp
-		}
+		res, nTimesRotationBecomes0, err = rotateTheDial(dialRotation)
 
 		fmt.Println("res after:", res)
-		fmt.Println("crossed the 0 so far:", nTimesRotationBecomes0)
+		fmt.Println("nTimesRotationBecomes0", nTimesRotationBecomes0)
 
 		fmt.Println()
 		fmt.Println()
@@ -105,4 +69,69 @@ func getResult(fileContent string, initialNumber int) (int, error) {
 	return nTimesRotationBecomes0, nil
 }
 
-// 7193 too high
+type DialRotation struct {
+	direction                   byte
+	nStepsToRotate              int
+	dialPosition                int
+	nTimesRotationBecomes0SoFar int
+}
+
+func rotateTheDial(d DialRotation) (dialPosition int, nTimesRotationBecomes0SoFar int, err error) {
+	switch d.direction {
+	case 'L':
+		// convert to negative value to properly add numbers later
+		d.nStepsToRotate = d.nStepsToRotate * -1
+
+		// part2, how many times we have crossed the 0
+		// Do we cross when we move to the left ?
+		if d.dialPosition != 0 && d.dialPosition+d.nStepsToRotate < 0 {
+			d.nTimesRotationBecomes0SoFar++
+		}
+
+		d.dialPosition = (d.dialPosition + d.nStepsToRotate) % 100
+		if d.dialPosition < 0 {
+			d.dialPosition += 100
+		}
+
+	case 'R':
+		// part2, how many times we have crossed the 0
+		// Do we cross when we move to the right ?
+		if d.dialPosition != 0 && d.dialPosition+d.nStepsToRotate > 100 { // > 100 as we already cover the case 0 later
+			d.nTimesRotationBecomes0SoFar++
+		}
+
+		d.dialPosition = (d.dialPosition + d.nStepsToRotate) % 100
+		if d.dialPosition < 0 {
+			d.dialPosition += 100
+		}
+	default:
+		return 0, 0, fmt.Errorf("unsupported rotation direction %v", d.direction)
+	}
+
+	switch d.dialPosition {
+	case 0:
+		d.nTimesRotationBecomes0SoFar++
+	case 100:
+		d.dialPosition = 0
+		d.nTimesRotationBecomes0SoFar++
+	}
+
+	// how many full circles have we performed while rotating the dial?
+	fullCircles := d.nStepsToRotate / 100
+	fmt.Println("temp", fullCircles)
+	// always absolute number
+	if fullCircles < 0 {
+		fullCircles = fullCircles * -1
+	}
+
+	if fullCircles > 0 {
+		// we don't want to multiply by 0 and loose the count
+		d.nTimesRotationBecomes0SoFar += fullCircles
+
+		d.nTimesRotationBecomes0SoFar--
+	}
+	return d.dialPosition, d.nTimesRotationBecomes0SoFar, nil
+}
+
+// 7193 is too high
+// 6295 is too low --> last one

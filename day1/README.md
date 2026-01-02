@@ -101,7 +101,18 @@ TLDR:
 This ^ just works when the result is not that big that represents more than one complete rotation. So what we need to do is res = (res + num) % 100, but num should be converted to negative if we are rotating to the Left. That way we always get the correct result. With a couple of examples in pen and paper is easier to check (with the given sample)
 
 ## Part2
-0..99
+0 + 1 = 1
 
+---
 
+crossed the 0 so far was 6
 
+res before: 32
+R1000
+res after: 32
+crossed the 0 so far: 17
+
+32+1000 = 1032
+temp: 1000/100=10
+
+result should be 32 and
