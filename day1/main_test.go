@@ -7,149 +7,105 @@ import (
 
 func Test_rotateTheDial(t *testing.T) {
 	tests := []struct {
-		d                               DialRotation
-		wantNewDialPosition             int
-		wantNTimesRotationBecomes0SoFar int
-		wantErr                         bool
+		d                                DialRotation
+		wantNewDialPosition              int
+		wantNTimesCrossed0InThisRotation int
+		wantErr                          bool
 	}{
-		// left rotation
 		{
 			d: DialRotation{
-				dialPosition:                3,
-				direction:                   'L',
-				nStepsToRotate:              1000,
-				nTimesRotationBecomes0SoFar: 0,
+				dialPosition:   3,
+				direction:      'R',
+				nStepsToRotate: 1000,
 			},
-			wantNewDialPosition:             3,
-			wantNTimesRotationBecomes0SoFar: 10,
-			wantErr:                         false,
-		},
-		// right rotation
-		{
-			d: DialRotation{
-				dialPosition:                3,
-				direction:                   'R',
-				nStepsToRotate:              1000,
-				nTimesRotationBecomes0SoFar: 0,
-			},
-			wantNewDialPosition:             3,
-			wantNTimesRotationBecomes0SoFar: 10,
-			wantErr:                         false,
+			wantNewDialPosition:              3,
+			wantNTimesCrossed0InThisRotation: 10,
+			wantErr:                          false,
 		},
 		{
 			d: DialRotation{
-				dialPosition:                0,
-				direction:                   'R',
-				nStepsToRotate:              1,
-				nTimesRotationBecomes0SoFar: 1,
+				dialPosition:   99,
+				direction:      'R',
+				nStepsToRotate: 1,
 			},
-			wantNewDialPosition:             1,
-			wantNTimesRotationBecomes0SoFar: 1,
-			wantErr:                         false,
+			wantNewDialPosition:              0,
+			wantNTimesCrossed0InThisRotation: 1,
+			wantErr:                          false,
 		},
 		{
 			d: DialRotation{
-				dialPosition:                99,
-				direction:                   'R',
-				nStepsToRotate:              1,
-				nTimesRotationBecomes0SoFar: 0,
+				dialPosition:   99,
+				direction:      'R',
+				nStepsToRotate: 10,
 			},
-			wantNewDialPosition:             0,
-			wantNTimesRotationBecomes0SoFar: 1,
-			wantErr:                         false,
+			wantNewDialPosition:              9,
+			wantNTimesCrossed0InThisRotation: 1,
+			wantErr:                          false,
 		},
 		{
 			d: DialRotation{
-				dialPosition:                99,
-				direction:                   'R',
-				nStepsToRotate:              10,
-				nTimesRotationBecomes0SoFar: 0,
+				dialPosition:   99,
+				direction:      'R',
+				nStepsToRotate: 1,
 			},
-			wantNewDialPosition:             9,
-			wantNTimesRotationBecomes0SoFar: 1,
-			wantErr:                         false,
+			wantNewDialPosition:              0,
+			wantNTimesCrossed0InThisRotation: 1,
+			wantErr:                          false,
 		},
 		{
 			d: DialRotation{
-				dialPosition:                99,
-				direction:                   'R',
-				nStepsToRotate:              1,
-				nTimesRotationBecomes0SoFar: 0,
+				dialPosition:   0,
+				direction:      'R',
+				nStepsToRotate: 1,
 			},
-			wantNewDialPosition:             0,
-			wantNTimesRotationBecomes0SoFar: 1,
-			wantErr:                         false,
+			wantNewDialPosition:              1,
+			wantNTimesCrossed0InThisRotation: 0,
+			wantErr:                          false,
 		},
 		{
 			d: DialRotation{
-				dialPosition:                0,
-				direction:                   'R',
-				nStepsToRotate:              1,
-				nTimesRotationBecomes0SoFar: 0,
+				dialPosition:   0,
+				direction:      'R',
+				nStepsToRotate: 100,
 			},
-			wantNewDialPosition:             1,
-			wantNTimesRotationBecomes0SoFar: 0,
-			wantErr:                         false,
+			wantNewDialPosition:              0,
+			wantNTimesCrossed0InThisRotation: 1,
+			wantErr:                          false,
 		},
 		{
 			d: DialRotation{
-				dialPosition:                0,
-				direction:                   'R',
-				nStepsToRotate:              100,
-				nTimesRotationBecomes0SoFar: 0,
+				dialPosition:   0,
+				direction:      'R',
+				nStepsToRotate: 1000,
 			},
-			wantNewDialPosition:             0,
-			wantNTimesRotationBecomes0SoFar: 1,
-			wantErr:                         false,
+			wantNewDialPosition:              0,
+			wantNTimesCrossed0InThisRotation: 10,
+			wantErr:                          false,
 		},
 		{
 			d: DialRotation{
-				dialPosition:                0,
-				direction:                   'R',
-				nStepsToRotate:              1000,
-				nTimesRotationBecomes0SoFar: 0,
+				dialPosition:   1,
+				direction:      'R',
+				nStepsToRotate: 99,
 			},
-			wantNewDialPosition:             0,
-			wantNTimesRotationBecomes0SoFar: 10,
-			wantErr:                         false,
+			wantNewDialPosition:              0,
+			wantNTimesCrossed0InThisRotation: 1,
+			wantErr:                          false,
 		},
 		{
 			d: DialRotation{
-				dialPosition:                1,
-				direction:                   'R',
-				nStepsToRotate:              99,
-				nTimesRotationBecomes0SoFar: 0,
+				dialPosition:   1,
+				direction:      'R',
+				nStepsToRotate: 99,
 			},
-			wantNewDialPosition:             0,
-			wantNTimesRotationBecomes0SoFar: 1,
-			wantErr:                         false,
-		},
-		{
-			d: DialRotation{
-				dialPosition:                1,
-				direction:                   'R',
-				nStepsToRotate:              99,
-				nTimesRotationBecomes0SoFar: 0,
-			},
-			wantNewDialPosition:             0,
-			wantNTimesRotationBecomes0SoFar: 1,
-			wantErr:                         false,
-		},
-		{
-			d: DialRotation{
-				dialPosition:                90,
-				direction:                   'R',
-				nStepsToRotate:              20,
-				nTimesRotationBecomes0SoFar: 0,
-			},
-			wantNewDialPosition:             0,
-			wantNTimesRotationBecomes0SoFar: 1,
-			wantErr:                         false,
+			wantNewDialPosition:              0,
+			wantNTimesCrossed0InThisRotation: 1,
+			wantErr:                          false,
 		},
 	}
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("%v", i), func(t *testing.T) {
-			newDialPosition, nTimesRotationBecomes0SoFar, err := rotateTheDial(tt.d)
+			newDialPosition, nTimesCrossed0InThisRotation, err := rotateTheDial(tt.d)
 			if err != nil {
 				if !tt.wantErr {
 					t.Errorf("rotateTheDial() failed: %v", err)
@@ -162,8 +118,8 @@ func Test_rotateTheDial(t *testing.T) {
 			if newDialPosition != tt.wantNewDialPosition {
 				t.Fatalf("expected %v, but got %v", tt.wantNewDialPosition, newDialPosition)
 			}
-			if nTimesRotationBecomes0SoFar != tt.wantNTimesRotationBecomes0SoFar {
-				t.Fatalf("expected %v, but got %v", tt.wantNTimesRotationBecomes0SoFar, nTimesRotationBecomes0SoFar)
+			if nTimesCrossed0InThisRotation != tt.wantNTimesCrossed0InThisRotation {
+				t.Fatalf("expected %v, but got %v", tt.wantNTimesCrossed0InThisRotation, nTimesCrossed0InThisRotation)
 			}
 		})
 	}
