@@ -72,7 +72,22 @@ func getResult(fileContent string) (int, error) {
 }
 
 func getSumOfInvalidIdsOfRange(start, end int) (int, error) {
+	invalidIds := getInvalidIds(start, end)
+	sum := getSum(invalidIds)
+	return sum, nil
+}
+
+func getSum(invalidIds []int) int {
 	sum := 0
+	for _, v := range invalidIds {
+		sum += v
+	}
+	return sum
+}
+
+func getInvalidIds(start, end int) []int {
+	var invalidIds []int
+
 	for num := start; num <= end; num++ {
 		numStr := strconv.Itoa(num)
 		l := len(numStr)
@@ -85,14 +100,11 @@ func getSumOfInvalidIdsOfRange(start, end int) (int, error) {
 		firstHalf := numStr[0 : l/2]
 		secondHalf := numStr[l/2 : l]
 		if firstHalf == secondHalf {
-			sum += num
+			invalidIds = append(invalidIds, num)
 		}
-
-		// fmt.Println(firstHalf)
-		// fmt.Println(secondHalf)
-
 	}
-	return sum, nil
+
+	return invalidIds
 }
 
 func generateRange(start, end int) []int {
